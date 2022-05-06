@@ -1,0 +1,30 @@
+/**
+
+\mainpage Peaceful Queens
+
+The _Peaceful Queens problem_ is the problem of placing \f$n\f$ queens on an
+\f$n \times n\f$ chessboard in such a way that no queen threatens any other,
+recalling that queens can attack along row, column, diagonals, and back-diagonals.
+The example below shows a solution to the \f$8 \times 8\f$ Peaceful Queens problem.
+
+\image html 14602753.svg width=25%
+
+This program uses a recursive backtracking algorithm to find solutions to the
+Peaceful Queens problem. 
+It uses exhaustive search
+through permutations to avoid row and column threats, pruning using a
+pair of arrays to detect diagonal and back-diagonal threats. 
+Each solution is stored as an array `A` such that the queen in row `i` is in column
+`A[i]`. Note that `A` therefore contains a permutation of the column indexes.
+Each solution is printed to the console and saved
+to a file in SVG (Scalable Vector Graphics) format.
+The number of solutions found is also reported to the console.
+
+### For Windows Users:
+A Visual Studio solution file `backtrack.sln` has been provided in the root folder. It has been tested with Visual Studio 2019 Community under Windows 10.
+
+### For Users of UNIX and g++
+A `make` file has been placed in the root directory. Type `make` to create the executable file.
+It has been tested with g++ 7.4 on the Ubuntu 18.04.1 subsystem under Windows 10.
+
+**/
