@@ -74,20 +74,84 @@ $(function() {
   <div class="headertitle"><div class="title">Peaceful Queens </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >The <em>Peaceful Queens problem</em> is the problem of placing \(n\) queens on an \(n \times n\) chessboard in such a way that no queen threatens any other, recalling that queens can attack along row, column, diagonals, and back-diagonals. The example below shows a solution to the \(8 \times 8\) Peaceful Queens problem.</p>
-<div class="image">
+<div class="textblock"><h2>1. Introduction</h2>
+<p >The <em>Peaceful Queens problem</em> is the problem of placing \(n\) queens on an \(n \times n\) chessboard in such a way that no queen threatens any other, recalling that queens can attack along row, column, diagonals, and back-diagonals. The example below shows a solution to the \(8 \times 8\) Peaceful Queens problem.</p>
+<p ><a class="anchor" id="fig1"></a></p><div class="image">
 <object type="image/svg+xml" data="14602753.svg" width="25%" style="pointer-events: none;"></object>
-</div>
-<p >This program uses a recursive backtracking algorithm to find solutions to the Peaceful Queens problem. It uses exhaustive search through permutations to avoid row and column threats, pruning using a pair of arrays to detect diagonal and back-diagonal threats. Each solution is stored as an array <code>A</code> such that the queen in row <code>i</code> is in column <code>A[i]</code>. Note that <code>A</code> therefore contains a permutation of the column indexes. Each solution is printed to the console and saved to a file in SVG (Scalable Vector Graphics) format. The number of solutions found is also reported to the console.</p>
+<div class="caption">
+Fig. 1: A solution to the 8x8 Peaceful Queens problem.</div></div>
+<p >This program uses a recursive backtracking algorithm to find solutions to the Peaceful Queens problem. It uses exhaustive search through permutations to avoid row and column threats, pruning using a pair of arrays to detect diagonal and back-diagonal threats. Each solution is stored as an array <code>A</code> such that the queen in row <code>i</code> is in column <code>A[i]</code>. Note that <code>A</code> therefore contains a permutation of the column indexes (see <a class="el" href="index.html#sec3">Section 3</a> for more details). Each solution is printed to the console and saved to a file in SVG (Scalable Vector Graphics) format. The number of solutions found is also reported to the console.</p>
+<p >It would unwise to run this progam for \(n \geq 10\) because it will fill your disk with solutions unless you comment out the line <code>ExportToSVG(A, n)</code> in function <code>process()</code>. Even if you do so, it would unwise to run this program for \(n \geq 16\) unless you have the patience to wait for the result, because the run-time required will increase exponentially with \(n\) (your experience may vary depending on the computing power that you have at your disposal). The table below shows the board size \(n\) and the number of Peaceful Queens solutions \(Q(n)\) on an \(n \times n \) chessboard for \(4 \leq n \leq 18\).</p>
+<center> <table class="doxtable">
+<tr>
+<th>\(n\) </th><th>\(Q(n)\) </th></tr>
+<tr>
+<td>4</td><td>2 </td></tr>
+<tr>
+<td>5</td><td>10 </td></tr>
+<tr>
+<td>6</td><td>4 </td></tr>
+<tr>
+<td>7</td><td>40 </td></tr>
+<tr>
+<td>8</td><td>92 </td></tr>
+<tr>
+<td>9</td><td>352 </td></tr>
+<tr>
+<td>10</td><td>724 </td></tr>
+<tr>
+<td>11</td><td>2,680 </td></tr>
+<tr>
+<td>12</td><td>14,200 </td></tr>
+<tr>
+<td>13</td><td>73,712 </td></tr>
+<tr>
+<td>14</td><td>365,596 </td></tr>
+<tr>
+<td>15</td><td>2,279,184 </td></tr>
+<tr>
+<td>16</td><td>14,772,512 </td></tr>
+<tr>
+<td>17</td><td>95,815,104 </td></tr>
+<tr>
+<td>18</td><td>666,090,624 </td></tr>
+</table>
+</center><h2>2. Compiling the Code</h2>
 <h3>For Windows Users:</h3>
 <p >A Visual Studio solution file <code>backtrack.sln</code> has been provided in the root folder. It has been tested with Visual Studio 2019 Community under Windows 10.</p>
 <h3>For Users of UNIX and g++</h3>
-<p >A <code>make</code> file has been placed in the root directory. Type <code>make</code> to create the executable file. It has been tested with g++ 7.4 on the Ubuntu 18.04.1 subsystem under Windows 10. </p>
+<p >A <code>make</code> file has been placed in the root directory. Type <code>make</code> to create the executable file. It has been tested with g++ 7.4 on the Ubuntu 18.04.1 subsystem under Windows 10.</p>
+<p ><a class="anchor" id="sec3"></a></p><h2>3. Drilling Down Into the Code</h2>
+<p >As mentioned above, each Peaceful Queens solution is stored as an array <code>A[n]</code> such that the queen in row <code>i</code> is in column <code>A[i]</code>, which means that <code>A</code> contains a permutation of the column indexes. For example, the \(8 \times 8\) solution shown in as shown in <a class="el" href="index.html#fig1">Fig. 1</a> would be stored as the array <code>A[8] = {1, 4, 6, 0, 2, 7, 5, 3]</code>. We can therefore begin with this somewhat naive recursive function for printing all permutations, which is initially called with <code>permute(A, n, n)</code>.</p>
+<pre style="color:#000000;background:#ffffff;"><span style="color:#800000; font-weight:bold; ">void</span> permute<span style="color:#808030; ">(</span><span style="color:#603000; ">size_t</span> A<span style="color:#808030; ">[</span><span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> <span style="color:#603000; ">size_t</span> m<span style="color:#808030; ">,</span> <span style="color:#603000; ">size_t</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">{</span>
+  <span style="color:#800000; font-weight:bold; ">if</span><span style="color:#808030; ">(</span>m <span style="color:#808030; ">=</span><span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>print<span style="color:#808030; ">(</span>A<span style="color:#808030; ">,</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span> <span style="color:#800000; font-weight:bold; ">else</span><span style="color:#800080; ">{</span>
+    permute<span style="color:#808030; ">(</span>A<span style="color:#808030; ">,</span> m <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">for</span><span style="color:#808030; ">(</span><span style="color:#603000; ">size_t</span> i<span style="color:#808030; ">=</span><span style="color:#008c00; ">0</span><span style="color:#800080; ">;</span> i<span style="color:#808030; ">&lt;</span>m<span style="color:#800080; ">;</span> i<span style="color:#808030; ">+</span><span style="color:#808030; ">+</span><span style="color:#808030; ">)</span><span style="color:#800080; ">{</span>
+      std<span style="color:#800080; ">::</span>swap<span style="color:#808030; ">(</span>A<span style="color:#808030; ">[</span>m<span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> A<span style="color:#808030; ">[</span>m <span style="color:#808030; ">-</span> i <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">]</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+      permute<span style="color:#808030; ">(</span>A<span style="color:#808030; ">,</span> m <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+      std<span style="color:#800080; ">::</span>swap<span style="color:#808030; ">(</span>A<span style="color:#808030; ">[</span>m<span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> A<span style="color:#808030; ">[</span>m <span style="color:#808030; ">-</span> i <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">]</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+    <span style="color:#800080; ">}</span> <span style="color:#696969; ">//for</span>
+  <span style="color:#800080; ">}</span> <span style="color:#696969; ">//else</span>
+<span style="color:#800080; ">}</span> <span style="color:#696969; ">//permute</span>
+</pre><p >Note that we should avoid permutations with consecutive elements <code>A[i+1] = A[i]+1</code> because they contain a diagonal threat. We can thus dispense with the first recursive call in the above code, resulting in the following.</p>
+<pre style="color:#000000;background:#ffffff;"><span style="color:#800000; font-weight:bold; ">void</span> permute<span style="color:#808030; ">(</span><span style="color:#603000; ">size_t</span> A<span style="color:#808030; ">[</span><span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> <span style="color:#603000; ">size_t</span> m<span style="color:#808030; ">,</span> <span style="color:#603000; ">size_t</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">{</span>
+  <span style="color:#800000; font-weight:bold; ">if</span><span style="color:#808030; ">(</span>m <span style="color:#808030; ">=</span><span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>print<span style="color:#808030; ">(</span>A<span style="color:#808030; ">,</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span> <span style="color:#800000; font-weight:bold; ">else</span><span style="color:#800080; ">{</span>
+    <span style="color:#800000; font-weight:bold; ">for</span><span style="color:#808030; ">(</span><span style="color:#603000; ">size_t</span> i<span style="color:#808030; ">=</span><span style="color:#008c00; ">0</span><span style="color:#800080; ">;</span> i<span style="color:#808030; ">&lt;</span>m<span style="color:#800080; ">;</span> i<span style="color:#808030; ">+</span><span style="color:#808030; ">+</span><span style="color:#808030; ">)</span><span style="color:#800080; ">{</span>
+      std<span style="color:#800080; ">::</span>swap<span style="color:#808030; ">(</span>A<span style="color:#808030; ">[</span>m<span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> A<span style="color:#808030; ">[</span>m <span style="color:#808030; ">-</span> i <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">]</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+      permute<span style="color:#808030; ">(</span>A<span style="color:#808030; ">,</span> m <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+      std<span style="color:#800080; ">::</span>swap<span style="color:#808030; ">(</span>A<span style="color:#808030; ">[</span>m<span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> A<span style="color:#808030; ">[</span>m <span style="color:#808030; ">-</span> i <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">]</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+    <span style="color:#800080; ">}</span> <span style="color:#696969; ">//for</span>
+  <span style="color:#800080; ">}</span> <span style="color:#696969; ">//else</span>
+<span style="color:#800080; ">}</span> <span style="color:#696969; ">//permute</span>
+</pre><p >Finally, we need to eliminate any remaining diagonal and back-diagonal threats, hopefully in \(O(1)\) time without recourse to any kind of linear search. This is accomplished by using two Boolean arrays <code>b[]</code> and <code>d[]</code> in which <code>b[i]</code> is <code>true</code> if back-diagonal <code>i</code> is unoccupied and <code>d[i]</code> is <code>true</code> if diagonal <code>i</code> is unoccupied.</p>
+<p >But how are back-diagonals and diagonals indexed? Note that if squares \((i,j)\) and \((k, \ell)\) are on the same back-diagonal, then \(i+j = k+\ell\), and if they are on the same diagonal, then \(i-j = k-\ell\). Therefore, we use two Boolean arrays <code>b[2n+1]</code> and <code>d[2n+1]</code> such that <code>b[i+j]</code> is <code>true</code> if the back-diagonal that square <code>i, j</code> is in is unoccupied, and <code>d[i+j+n-1]</code>is <code>true</code> if the diagonal that square <code>i, j</code> is in is unoccupied. All that remains is to set and unset the corresponding entries in <code>b</code> and <code>d</code> every time a swap is made in <code>A</code>, which you can see in function <code>queen(size_t[], bool[], bool[], size_t, size_t, size_t&amp;)</code> in <code>backtrack.cpp</code>.</p>
+<p ><a class="anchor" id="sec4"></a></p><h2>4. A Note on SVG Format</h2>
+<p >The Peaceful Queens solutions found by this program are saved in SVG (Scalable Vector Graphics) format, which can be viewed in any web browser. <a class="el" href="index.html#fig1">Fig. 1</a> shows an example. Notice that you can zoom in and out on the image in your browser without any pixelation. For more information on this format, see the <a href="https://en.wikipedia.org/wiki/Scalable_Vector_Graphics">Wikipedia article</a>. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 6 2022 16:08:22 for Peaceful Queens by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Tue May 10 2022 16:13:47 for Peaceful Queens by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

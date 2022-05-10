@@ -2,12 +2,15 @@
 
 \mainpage Peaceful Queens
 
+## 1. Introduction
+
 The _Peaceful Queens problem_ is the problem of placing \f$n\f$ queens on an
 \f$n \times n\f$ chessboard in such a way that no queen threatens any other,
 recalling that queens can attack along row, column, diagonals, and back-diagonals.
 The example below shows a solution to the \f$8 \times 8\f$ Peaceful Queens problem.
 
-\image html 14602753.svg width=25%
+\anchor fig1
+\image html 14602753.svg "Fig. 1: A solution to the 8x8 Peaceful Queens problem." width=25%
 
 This program uses a recursive backtracking algorithm to find solutions to the
 Peaceful Queens problem. 
@@ -15,10 +18,61 @@ It uses exhaustive search
 through permutations to avoid row and column threats, pruning using a
 pair of arrays to detect diagonal and back-diagonal threats. 
 Each solution is stored as an array `A` such that the queen in row `i` is in column
-`A[i]`. Note that `A` therefore contains a permutation of the column indexes.
+`A[i]`.
+Note that `A` therefore contains a permutation of the column indexes
+(see \ref sec3 "Section 3" for more details).
 Each solution is printed to the console and saved
 to a file in SVG (Scalable Vector Graphics) format.
 The number of solutions found is also reported to the console.
+
+It would unwise to run this progam for \f$n \geq 10\f$ because it will fill your disk
+with solutions unless you comment out the line `ExportToSVG(A, n)` in function `process()`.
+Even if you do so, it would unwise to run this program for \f$n \geq 16\f$ unless you
+have the patience to wait for the result, because the run-time required will increase
+exponentially with \f$n\f$ (your experience may vary depending on the computing power
+that you have at your disposal).
+The table below shows the board size \f$n\f$ and the number of Peaceful Queens solutions
+\f$Q(n)\f$ on an \f$n \times n \f$ chessboard for \f$4 \leq n \leq 18\f$.
+
+<center>
+<table>
+<tr>
+<th>\f$n\f$</td>
+<th>\f$Q(n)\f$</td>
+<tr>
+<td>4</td><td>2</td>
+<tr>
+<td>5</td><td>10</td>
+<tr>
+<td>6</td><td>4</td>
+<tr>
+<td>7</td><td>40</td>
+<tr>
+<td>8</td><td>92</td>
+<tr>
+<td>9</td><td>352</td>
+<tr>
+<td>10</td><td>724</td>
+<tr>
+<td>11</td><td>2,680</td>
+<tr>
+<td>12</td><td>14,200</td>
+<tr>
+<td>13</td><td>73,712</td>
+<tr>
+<td>14</td><td>365,596</td>
+<tr>
+<td>15</td><td>2,279,184</td>
+<tr>
+<td>16</td><td>14,772,512</td>
+<tr>
+<td>17</td><td>95,815,104</td>
+<tr>
+<td>18</td><td>666,090,624</td>
+</table>
+</center>
+
+## 2. Compiling the Code
 
 ### For Windows Users:
 A Visual Studio solution file `backtrack.sln` has been provided in the root folder. It has been tested with Visual Studio 2019 Community under Windows 10.
@@ -26,5 +80,77 @@ A Visual Studio solution file `backtrack.sln` has been provided in the root fold
 ### For Users of UNIX and g++
 A `make` file has been placed in the root directory. Type `make` to create the executable file.
 It has been tested with g++ 7.4 on the Ubuntu 18.04.1 subsystem under Windows 10.
+
+\anchor sec3
+## 3. Drilling Down Into the Code
+
+As mentioned above, each Peaceful Queens solution is stored as an array `A[n]` such that the
+queen in row `i` is in column
+`A[i]`, which means that `A` contains a permutation of the column indexes. 
+ For example, the \f$8 \times 8\f$ solution shown in as shown in \ref fig1 "Fig. 1" 
+would be stored as the array
+`A[8] = {1, 4, 6, 0, 2, 7, 5, 3]`.
+We can
+therefore begin with this somewhat naive recursive function for printing all permutations,
+which is initially called with `permute(A, n, n)`.
+
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800000; font-weight:bold; '>void</span> permute<span style='color:#808030; '>(</span><span style='color:#603000; '>size_t</span> A<span style='color:#808030; '>[</span><span style='color:#808030; '>]</span><span style='color:#808030; '>,</span> <span style='color:#603000; '>size_t</span> m<span style='color:#808030; '>,</span> <span style='color:#603000; '>size_t</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>{</span>
+  <span style='color:#800000; font-weight:bold; '>if</span><span style='color:#808030; '>(</span>m <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#808030; '>)</span>print<span style='color:#808030; '>(</span>A<span style='color:#808030; '>,</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span> <span style='color:#800000; font-weight:bold; '>else</span><span style='color:#800080; '>{</span>
+    permute<span style='color:#808030; '>(</span>A<span style='color:#808030; '>,</span> m <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>,</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    <span style='color:#800000; font-weight:bold; '>for</span><span style='color:#808030; '>(</span><span style='color:#603000; '>size_t</span> i<span style='color:#808030; '>=</span><span style='color:#008c00; '>0</span><span style='color:#800080; '>;</span> i<span style='color:#808030; '>&lt;</span>m<span style='color:#800080; '>;</span> i<span style='color:#808030; '>+</span><span style='color:#808030; '>+</span><span style='color:#808030; '>)</span><span style='color:#800080; '>{</span>
+      std<span style='color:#800080; '>::</span>swap<span style='color:#808030; '>(</span>A<span style='color:#808030; '>[</span>m<span style='color:#808030; '>]</span><span style='color:#808030; '>,</span> A<span style='color:#808030; '>[</span>m <span style='color:#808030; '>-</span> i <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>]</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+      permute<span style='color:#808030; '>(</span>A<span style='color:#808030; '>,</span> m <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>,</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+      std<span style='color:#800080; '>::</span>swap<span style='color:#808030; '>(</span>A<span style='color:#808030; '>[</span>m<span style='color:#808030; '>]</span><span style='color:#808030; '>,</span> A<span style='color:#808030; '>[</span>m <span style='color:#808030; '>-</span> i <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>]</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    <span style='color:#800080; '>}</span> <span style='color:#696969; '>//for</span>
+  <span style='color:#800080; '>}</span> <span style='color:#696969; '>//else</span>
+<span style='color:#800080; '>}</span> <span style='color:#696969; '>//permute</span>
+</pre>
+<!--Created using ToHtml.com on 2022-05-10 20:17:39 UTC -->
+
+Note that we should avoid permutations with consecutive elements `A[i+1] = A[i]+1`
+because they contain a diagonal threat. We can thus dispense with the
+first recursive call in the above code, resulting in the following.
+
+<pre style='color:#000000;background:#ffffff;'><span style='color:#800000; font-weight:bold; '>void</span> permute<span style='color:#808030; '>(</span><span style='color:#603000; '>size_t</span> A<span style='color:#808030; '>[</span><span style='color:#808030; '>]</span><span style='color:#808030; '>,</span> <span style='color:#603000; '>size_t</span> m<span style='color:#808030; '>,</span> <span style='color:#603000; '>size_t</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>{</span>
+  <span style='color:#800000; font-weight:bold; '>if</span><span style='color:#808030; '>(</span>m <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#808030; '>)</span>print<span style='color:#808030; '>(</span>A<span style='color:#808030; '>,</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span> <span style='color:#800000; font-weight:bold; '>else</span><span style='color:#800080; '>{</span>
+    <span style='color:#800000; font-weight:bold; '>for</span><span style='color:#808030; '>(</span><span style='color:#603000; '>size_t</span> i<span style='color:#808030; '>=</span><span style='color:#008c00; '>0</span><span style='color:#800080; '>;</span> i<span style='color:#808030; '>&lt;</span>m<span style='color:#800080; '>;</span> i<span style='color:#808030; '>+</span><span style='color:#808030; '>+</span><span style='color:#808030; '>)</span><span style='color:#800080; '>{</span>
+      std<span style='color:#800080; '>::</span>swap<span style='color:#808030; '>(</span>A<span style='color:#808030; '>[</span>m<span style='color:#808030; '>]</span><span style='color:#808030; '>,</span> A<span style='color:#808030; '>[</span>m <span style='color:#808030; '>-</span> i <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>]</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+      permute<span style='color:#808030; '>(</span>A<span style='color:#808030; '>,</span> m <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>,</span> n<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+      std<span style='color:#800080; '>::</span>swap<span style='color:#808030; '>(</span>A<span style='color:#808030; '>[</span>m<span style='color:#808030; '>]</span><span style='color:#808030; '>,</span> A<span style='color:#808030; '>[</span>m <span style='color:#808030; '>-</span> i <span style='color:#808030; '>-</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>]</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    <span style='color:#800080; '>}</span> <span style='color:#696969; '>//for</span>
+  <span style='color:#800080; '>}</span> <span style='color:#696969; '>//else</span>
+<span style='color:#800080; '>}</span> <span style='color:#696969; '>//permute</span>
+</pre>
+<!--Created using ToHtml.com on 2022-05-10 20:24:25 UTC -->
+
+Finally, we need to eliminate any remaining diagonal and back-diagonal threats,
+hopefully in \f$O(1)\f$ time without recourse to any kind of linear search.
+This is accomplished by using two Boolean arrays `b[]` and `d[]`
+in which `b[i]` is `true` if back-diagonal `i` is unoccupied and `d[i]` is
+`true` if diagonal `i` is unoccupied. 
+
+But how are back-diagonals and diagonals
+indexed? Note that if squares \f$(i,j)\f$ and \f$(k, \ell)\f$ are on the
+same back-diagonal, then \f$i+j = k+\ell\f$, and if they are on the
+same diagonal, then \f$i-j = k-\ell\f$.
+Therefore, we use two Boolean arrays `b[2n+1]` and `d[2n+1]`
+such that `b[i+j]` is `true` if the back-diagonal that square `i, j` is in is
+unoccupied, and `d[i+j+n-1]`is `true` if the diagonal that square `i, j` is in is
+unoccupied. All that remains is to set and unset the corresponding entries in
+`b` and `d` every time a swap is made in `A`, which you can see in
+function `queen(size_t[], bool[], bool[], size_t, size_t, size_t&)` in `backtrack.cpp`.
+
+
+\anchor sec4
+## 4. A Note on SVG Format
+
+The Peaceful Queens solutions found by this program are saved in SVG (Scalable
+Vector Graphics) format, which can be viewed in any web browser.
+\ref fig1 "Fig. 1" shows an example. Notice that you can zoom in and out on the
+image in your browser without any pixelation.
+For more information on this format, see the 
+[Wikipedia article](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
+
+
 
 **/

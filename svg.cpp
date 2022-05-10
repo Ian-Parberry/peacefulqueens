@@ -4,9 +4,10 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+
 // MIT License
 //
-// Copyright (c) 2020 Ian Parberry
+// Copyright (c) 2022 Ian Parberry
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -33,10 +34,10 @@
 /// \param n The number of elements in the array.
 /// \return File name string.
 
-std::string GetFileName(int A[], int n){
+std::string GetFileName(size_t A[], size_t n){
   std::string s; //for file name
 
-  for(int i=0; i<n; i++) //for each array entry
+  for(size_t i=0; i<n; i++) //for each array entry
     s += std::to_string(A[i]); //concatenate into string
 
   return s; //file name
@@ -48,7 +49,7 @@ std::string GetFileName(int A[], int n){
 /// \param ostream An output stream, assumed to be opened.
 /// \param w Width and height of the image.
 
-void SVGHeader(std::ofstream& ostream, int w){
+void SVGHeader(std::ofstream& ostream, size_t w){
   ostream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
   ostream << "<svg width=\"" << w <<  "\" height=\"" << w << "\" " <<
     "viewBox=\"-4 -4 " << w << " " << w << "\" " << 
@@ -61,7 +62,7 @@ void SVGHeader(std::ofstream& ostream, int w){
 /// \param ostream An output stream, assumed to be opened.
 /// \param r Radius for circles.
 
-void SVGStyle(std::ofstream& ostream, int r){
+void SVGStyle(std::ofstream& ostream, size_t r){
   ostream << "<style>" << std::endl;
   ostream << "circle{stroke:black;stroke-width:1;fill:darkgray;r:" <<
     r << "}" << std::endl;
@@ -77,7 +78,7 @@ void SVGStyle(std::ofstream& ostream, int r){
 /// \param x2 X-coordinate of second end of line.
 /// \param y2 Y-coordinate of second end of line.
 
-void SVGLine(std::ofstream& ostream, int x1, int y1, int x2, int y2){
+void SVGLine(std::ofstream& ostream, size_t x1, size_t y1, size_t x2, size_t y2){
   ostream << "<line x1=\"" << x1 << "\" y1=\"" << y1 <<
     "\" x2=\"" << x2 << "\" y2=\"" << y2 << "\"/>" << std::endl;
 } //SVGLine
@@ -89,7 +90,7 @@ void SVGLine(std::ofstream& ostream, int x1, int y1, int x2, int y2){
 /// \param cx X-coordinate of the center of the circle.
 /// \param cy Y-coordinate of the center of the circle.
 
-void SVGCircle(std::ofstream& ostream, int cx, int cy){
+void SVGCircle(std::ofstream& ostream, size_t cx, size_t cy){
   ostream << "<circle cx=\"" << cx << "\" cy=\"" << cy << "\"/>" << std::endl;
 } //SVGCircle
 
@@ -101,7 +102,7 @@ void SVGCircle(std::ofstream& ostream, int cx, int cy){
 /// \param y Y-coordinate of the center of the square.
 /// \param w Width and height of the square.
 
-void SVGSquare(std::ofstream& ostream, int x, int y, int w){
+void SVGSquare(std::ofstream& ostream, size_t x, size_t y, size_t w){
   ostream << "<rect x=\"" << x << "\" y=\"" << y <<
     "\" width=\"" << w << "\" height=\"" << w << "\"/>" << std::endl;
 } //SVGSquare
@@ -113,12 +114,12 @@ void SVGSquare(std::ofstream& ostream, int x, int y, int w){
 /// \param w Width of a chessboard square in pixels.
 /// \param n Width and height of the chessboard in squares.
 
-void SVGChessboard(std::ofstream& ostream, int w, int n){  
+void SVGChessboard(std::ofstream& ostream, size_t w, size_t n){  
   ostream << "<rect width=\"" << w*n << "\" height=\"" << w*n << 
     "\" fill=\"none\" stroke=\"black\" stroke-width=\"1\"/>" << std::endl;
 
-  for(int i=0; i<n; i++)
-    for(int j=0; j<n; j++)
+  for(size_t i=0; i<n; i++)
+    for(size_t j=0; j<n; j++)
       if((i&1) ^ (j&1))
         SVGSquare(ostream, i*w, j*w, w);
 } //SVGChessboard
@@ -131,10 +132,10 @@ void SVGChessboard(std::ofstream& ostream, int w, int n){
 /// \param w Width of a chessboard square in pixels.
 /// \param n Width and height of the chessboard in squares.
 
-void SVGQueens(std::ofstream& ostream, int A[], int w, int n){
-  const int delta = w/2; //half the width of a square
+void SVGQueens(std::ofstream& ostream, size_t A[], size_t w, size_t n){
+  const size_t delta = w/2; //half the width of a square
 
-  for(int i=0; i<n; i++)
+  for(size_t i=0; i<n; i++)
     SVGCircle(ostream, i*w + delta, A[i]*w + delta);
 } //SVGSquare
 
@@ -144,8 +145,8 @@ void SVGQueens(std::ofstream& ostream, int A[], int w, int n){
 /// \param A An array containing the solution.
 /// \param n The number of elements in the array.
 
-void ExportToSVG(int A[], int n){
-  const int w = 32; //width and height of chessboard squares in pixels
+void ExportToSVG(size_t A[], size_t n){
+  const size_t w = 32; //width and height of chessboard squares in pixels
 
   std::ofstream ostream(GetFileName(A, n) + ".svg"); 
 
