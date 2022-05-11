@@ -1,6 +1,6 @@
 # Peaceful Queens
 
-<img src="https://github.com/Ian-Parberry/peacefulqueens/blob/main/Doxygen/Images/14602753.svg" alt="" width="50%" />
+<img src="https://github.com/Ian-Parberry/peacefulqueens/blob/main/Doxygen/Images/14602753.svg" alt="" width="25%" />
 
 Backtracking code for the Peaceful Queens problem created and maintained
 by [Ian Parberry](http://ianparberry.com/).
