@@ -1,5 +1,7 @@
 # Peaceful Queens
 
+<img src="https://github.com/Ian-Parberry/peacefulqueens/blob/main/Doxygen/Images/14602753.svg" alt="" width="50%" />
+
 Backtracking code for the Peaceful Queens problem created and maintained
 by [Ian Parberry](http://ianparberry.com/).
 For instructions on how to compile and grok the code, read the Doxygen-generated
