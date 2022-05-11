@@ -120,7 +120,7 @@ Fig. 1: A solution to the 8x8 Peaceful Queens problem.</div></div>
 <h3>For Windows Users:</h3>
 <p >A Visual Studio solution file <code>backtrack.sln</code> has been provided in the root folder. It has been tested with Visual Studio 2019 Community under Windows 10.</p>
 <h3>For Users of UNIX and g++</h3>
-<p >A <code>make</code> file has been placed in the root directory. Type <code>make</code> to create the executable file. It has been tested with g++ 7.4 on the Ubuntu 18.04.1 subsystem under Windows 10.</p>
+<p >A <code>make</code> file has been placed in the root directory. Type <code>make</code> to create the executable file. It has been tested with g++ 9.4.0 on the Ubuntu 20.04.4 LTS subsystem under Windows 10.</p>
 <p ><a class="anchor" id="sec3"></a></p><h2>3. Drilling Down Into the Code</h2>
 <p >As mentioned above, each Peaceful Queens solution is stored as an array <code>A[n]</code> such that the queen in row <code>i</code> is in column <code>A[i]</code>, which means that <code>A</code> contains a permutation of the column indexes. For example, the \(8 \times 8\) solution shown in as shown in <a class="el" href="index.html#fig1">Fig. 1</a> would be stored as the array <code>A[8] = {1, 4, 6, 0, 2, 7, 5, 3]</code>. We can therefore begin with this somewhat naive recursive function for printing all permutations, which is initially called with <code>permute(A, n, n)</code>.</p>
 <pre style="color:#000000;background:#ffffff;"><span style="color:#800000; font-weight:bold; ">void</span> permute<span style="color:#808030; ">(</span><span style="color:#603000; ">size_t</span> A<span style="color:#808030; ">[</span><span style="color:#808030; ">]</span><span style="color:#808030; ">,</span> <span style="color:#603000; ">size_t</span> m<span style="color:#808030; ">,</span> <span style="color:#603000; ">size_t</span> n<span style="color:#808030; ">)</span><span style="color:#800080; ">{</span>
@@ -151,7 +151,7 @@ Fig. 1: A solution to the 8x8 Peaceful Queens problem.</div></div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 10 2022 16:13:47 for Peaceful Queens by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+Generated on Wed May 11 2022 13:16:04 for Peaceful Queens by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
 </small></address>
 </body>
 </html>

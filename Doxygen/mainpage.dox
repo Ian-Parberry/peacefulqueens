@@ -79,7 +79,7 @@ A Visual Studio solution file `backtrack.sln` has been provided in the root fold
 
 ### For Users of UNIX and g++
 A `make` file has been placed in the root directory. Type `make` to create the executable file.
-It has been tested with g++ 7.4 on the Ubuntu 18.04.1 subsystem under Windows 10.
+It has been tested with g++ 9.4.0 on the Ubuntu 20.04.4 LTS subsystem under Windows 10.
 
 \anchor sec3
 ## 3. Drilling Down Into the Code
