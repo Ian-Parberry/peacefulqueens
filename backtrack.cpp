@@ -27,7 +27,40 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
+#if defined(_MSC_VER) //Windows Visual Studio 
+  #include <windows.h>
+#else //g++, *nix
+  #include <time.h>
+#endif
+
 void ExportToSVG(size_t[], size_t); //defined in svg.cpp
+
+/// Get CPU time for this process in milliseconds. It's annoying that
+/// `std::chron` has no cross-platform support for this.
+/// \return User CPU time in milliseconds.
+
+const uint64_t CPUTime(){
+#if defined(_MSC_VER) //Windows Visual Studio 
+  uint64_t llCNS = 0; //for CPU time in centinanoseconds
+
+  HANDLE hProcess = //handle to this process
+    OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, GetCurrentProcessId()); 
+
+  if(hProcess != nullptr){ //handle is valid
+    FILETIME ftCreation, ftExit, ftKernel; //unused
+    FILETIME ftUser; //this one we want 
+
+    if(GetProcessTimes(hProcess, &ftCreation, &ftExit, &ftKernel, &ftUser))
+      llCNS = *((uint64_t*)&ftUser);  //get time values
+    
+    CloseHandle(hProcess); //close the process handle
+  } //if
+
+  return uint64_t(llCNS)/10000; 
+#else //g++, *nix
+  return uint64_t(1000.0*(double)(clock())/CLOCKS_PER_SEC);
+#endif
+} //CPUTime
 
 /// \brief Print an array.
 ///
@@ -65,10 +98,10 @@ void initialize(size_t A[], bool b[], bool d[], size_t n){
 /// \param n The number of elements in the solution array.
 /// \param count [in, out] Running count of number of solutions found.
 
-void process(size_t A[], size_t n, size_t& count){
+void process(size_t A[], size_t n, uint64_t& count){
   count++; //one more solution
-  print(A, n); //print to console
-  ExportToSVG(A, n); //export as SVG file
+  //print(A, n); //print to console
+  //ExportToSVG(A, n); //export as SVG file
 } //process
 
 /// \brief Backtrack for Peaceful Queens.
@@ -85,14 +118,14 @@ void process(size_t A[], size_t n, size_t& count){
 /// \param n The number of elements in the solution array.
 /// \param count [in, out] Running count of number of solutions found.
 
-void queen(size_t A[], bool b[], bool d[], size_t m, size_t n, size_t& count){
+void queen(size_t A[], bool b[], bool d[], size_t m, size_t n, uint64_t& count){
   if(m == 0) //base of recursion
     process(A, n, count); //process new solution
 
   else{ //recursive part
     for(int i=0; i<m; i++){
-      const size_t j = m - 1; //first element to swap in permutation
-      const size_t k = j - i; //second element to swap in permutation
+      const size_t j = m - 1; //largest index to swap in permutation
+      const size_t k = j - i; //smallest index to swap in permutation
       const size_t dx = A[k] + j; //diagonal index
       const size_t bx = A[k] - m + n; //back-diagonal index
 
@@ -117,22 +150,23 @@ void queen(size_t A[], bool b[], bool d[], size_t m, size_t n, size_t& count){
 /// the console and delete the arrays.
 /// \param n Width and height of the chessboard in squares.
 
-void queen(size_t n){
+uint64_t queen(size_t n){
   size_t* A = new size_t[n]; //solution array
   const size_t m = 2*n - 1; //size of diagonal and back-diagonal arrays
   bool* b = new bool[m]; //back-diagonal array
   bool* d = new bool[m]; //diagonal array
 
-  size_t count = 0; //for number of solutions
+  uint64_t nCount = 0; //for number of solutions
   initialize(A, b, d, n); //initialize arrays
-  queen(A, b, d, n, n, count); //here's where the work gets done
-  std::cout <<  std::endl<< count << " solutions found" << std::endl; //report
+  queen(A, b, d, n, n, nCount); //here's where the work gets done
 
   //clean up and exit
 
   delete [] A;
   delete [] b;
   delete [] d;
+
+  return nCount;
 } //queen
 
 /// \brief Main.
@@ -141,8 +175,11 @@ void queen(size_t n){
 /// \return 0
 
 int main(){
-  const size_t n = 4; //board size
-  queen(n); //backtrack for peaceful queens
+  const size_t n = 11; //board size
+  const uint64_t nCount = queen(n); //backtrack for peaceful queens
+  
+  std::cout << std::endl << nCount << " solutions found" << std::endl; //report
+  std::cout << CPUTime()/1000.0f << " seconds CPU time" << std::endl; //CPU time
 
   return 0; //what could possibly go wrong?
 } //main

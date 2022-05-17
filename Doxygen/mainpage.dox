@@ -17,9 +17,9 @@ Peaceful Queens problem.
 It uses exhaustive search
 through permutations to avoid row and column threats, pruning using a
 pair of arrays to detect diagonal and back-diagonal threats. 
-Each solution is stored as an array `A` such that the queen in row `i` is in column
+Each solution is stored as an array `A` such that the queen in column `i` is in row
 `A[i]`.
-Note that `A` therefore contains a permutation of the column indexes
+Note that `A` therefore contains a permutation of the row indexes
 (see \ref sec3 "Section 3" for more details).
 Each solution is printed to the console and saved
 to a file in SVG (Scalable Vector Graphics) format.
@@ -85,8 +85,8 @@ It has been tested with g++ 9.4.0 on the Ubuntu 20.04.4 LTS subsystem under Wind
 ## 3. Drilling Down Into the Code
 
 As mentioned above, each Peaceful Queens solution is stored as an array `A[n]` such that the
-queen in row `i` is in column
-`A[i]`, which means that `A` contains a permutation of the column indexes. 
+queen in column `i` is in row
+`A[i]`, which means that `A` contains a permutation of the row indexes. 
  For example, the \f$8 \times 8\f$ solution shown in as shown in \ref fig1 "Fig. 1" 
 would be stored as the array
 `A[8] = {1, 4, 6, 0, 2, 7, 5, 3]`.
