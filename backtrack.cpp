@@ -100,8 +100,8 @@ void initialize(size_t A[], bool b[], bool d[], size_t n){
 
 void process(size_t A[], size_t n, uint64_t& count){
   count++; //one more solution
-  //print(A, n); //print to console
-  //ExportToSVG(A, n); //export as SVG file
+  print(A, n); //print to console
+  ExportToSVG(A, n); //export as SVG file
 } //process
 
 /// \brief Backtrack for Peaceful Queens.
@@ -175,7 +175,7 @@ uint64_t queen(size_t n){
 /// \return 0
 
 int main(){
-  const size_t n = 11; //board size
+  const size_t n = 8; //board size
   const uint64_t nCount = queen(n); //backtrack for peaceful queens
   
   std::cout << std::endl << nCount << " solutions found" << std::endl; //report
