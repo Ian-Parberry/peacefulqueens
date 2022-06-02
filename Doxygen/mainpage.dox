@@ -31,11 +31,15 @@ Even if you do so, it would unwise to run this program for \f$n \geq 16\f$ unles
 have the patience to wait for the result, because the run-time required will increase
 exponentially with \f$n\f$ (your experience may vary depending on the computing power
 that you have at your disposal).
-The table below shows the board size \f$n\f$ and the number of Peaceful Queens solutions
+\ref table1 "Table 1" shows the board size \f$n\f$ and the number of Peaceful Queens solutions
 \f$Q(n)\f$ on an \f$n \times n \f$ chessboard for \f$4 \leq n \leq 18\f$.
 
+\anchor table1
 <center>
 <table>
+<caption>
+Table 1.
+</caption>
 <tr>
 <th>\f$n\f$</td>
 <th>\f$Q(n)\f$</td>
